@@ -25,16 +25,16 @@ app.post('/update', function (req, res) {
     // TODO update exist website files
 })
 
+app.post('/config', function (req, res) {
+    // TODO set some config for website
+})
+
 app.post('/setdomain', function (req, res) {
     // TODO set domain or subdomain for exist website
 })
 
 app.post('/removedomain', function (req, res) {
     // TODO remove domain or subdomain for exist website
-})
-
-app.get('/resourceusage', function (req, res) {
-    // TODO return resource useage
 })
  
 app.listen(process.env.PORT, () => {

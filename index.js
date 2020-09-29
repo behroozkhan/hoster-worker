@@ -58,11 +58,9 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         metadata, longProcessData);
 
     if (!hostResult.success) {
-        res.status(500).json(
-            new Response(false, {error: hostResult.error}, 
-                hostResult.error
-            ).json()
-        );
+        updateLongProcess(longProcessData, 'Failed on host zip file ...', "failed", {
+            progress: 20, error: hostResult.error
+        });
         return;
     }
     
@@ -74,11 +72,9 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         hostResult.finalPath, domainConfig, hostResult.servicePorts, longProcessData);
 
     if (!nginxResult.success) {
-        res.status(500).json(
-            new Response(false, {error: hostResult.error}, 
-                error.message
-            ).json()
-        );
+        updateLongProcess(longProcessData, 'Failed on config nginx ...', "failed", {
+            progress: 20, error: nginxResult.error
+        });
         return;
     }
     
@@ -89,11 +85,9 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     let cdnResult = await HosterUtils.configCDN(username, websiteName, domainConfig, longProcessData);
 
     if (!cdnResult.success) {
-        res.status(500).json(
-            new Response(false, {error: hostResult.error}, 
-                error.message
-            ).json()
-        );
+        updateLongProcess(longProcessData, 'Failed on config CDN ...', "failed", {
+            progress: 20, error: cdnResult.error
+        });
         return;
     }
     

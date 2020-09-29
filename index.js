@@ -126,7 +126,7 @@ app.post('/removedomain', async function (req, res) {
     // TODO set domain or subdomain for exist website
 });
 
-app.post('/test', async function (req, res) {
+app.get('/test', async function (req, res) {
     res.json(
         new Response(true, {message: "Hoster is alive ..."}).json()
     )

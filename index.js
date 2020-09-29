@@ -27,7 +27,6 @@ let upload = multer({ storage: storage })
 
 app.post('/host', upload.single('siteZip'), async (req, res) => {
     // host a website and start its services
-    console.log("host 1");
     const file = req.file;
 
     if (!file) {
@@ -42,11 +41,8 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     Object.keys(req.body).forEach(key => {
         req.body[key] = JSON.parse(req.body[key]);
     })
-    console.log("req.body", req.body);
 
     const {username, websiteName, userId, publisherId, domainConfig, metadata, longProcessData} = req.body;
-
-    console.log("host2", file, req.body);
 
     res.json(
         new Response(true, {
@@ -64,7 +60,7 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     if (!hostResult.success) {
         res.status(500).json(
             new Response(false, {error: hostResult.error}, 
-                error.message
+                hostResult.error
             ).json()
         );
         return;

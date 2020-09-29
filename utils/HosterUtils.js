@@ -1,3 +1,4 @@
+const Promise = require('bluebird');
 const exec = Promise.promisify(require('child_process').exec);
 let rimraf = require("rimraf");
 const fs = require('fs');

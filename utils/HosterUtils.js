@@ -4,6 +4,7 @@ let rimraf = require("rimraf");
 const fs = require('fs');
 const CDNHelper = require('./cdnHelper');
 const CDNInterface = require('./cdnInterface/cdnInterface');
+const { updateLongProcess } = require('./utils');
 const fsPromises = fs.promises;
 
 let HosterUtils = {};

@@ -123,7 +123,13 @@ app.post('/setdomain', async function (req, res) {
 });
 
 app.post('/removedomain', async function (req, res) {
-    // TODO remove domain or subdomain for exist website
+    // TODO set domain or subdomain for exist website
+});
+
+app.post('/test', async function (req, res) {
+    res.json(
+        new Response(true, {message: "Hoster is alive ..."}).json()
+    )
 });
  
 app.listen(process.env.PORT, () => {

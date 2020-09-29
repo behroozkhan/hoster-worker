@@ -20,8 +20,9 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
 
         // read current servicePorts.json file from `${finalPath}/servicePorts.json`
         let oldServicePorts = {};
-        if (!fs.existsSync(`${finalPath}/servicePorts.json`))  {
-            oldServicePorts = JSON.parse(await fsPromises.readFile(`${finalPath}/servicePorts.json`, 'utf8'));
+        if (fs.existsSync(`${finalPath}/servicePorts.json`))  {
+            let oldServicePortData = await fsPromises.readFile(`${finalPath}/servicePorts.json`, 'utf8')
+            oldServicePorts = JSON.parse(oldServicePortData);
         }
     
         updateLongProcess(longProcessData, 'Copying website files ...', "running", {

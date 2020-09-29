@@ -25,3 +25,22 @@ module.exports.makeResNum = function makeResNum(length) {
     }
     return result;
 }
+
+module.exports.updateLongProcess = function updateLongProcess({longProcessUrl, longProcessToken, longProcessId}, status, state, metaData) {
+    axios({
+        method: 'post',
+        url: longProcessUrl,
+        data: {
+            longProcessId,
+            status,
+            state,
+            metaData
+        },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${longProcessToken}`
+        }
+    }).then(res => {}).catch(error => {
+        console.log("update long process error: ", error);
+    });
+};

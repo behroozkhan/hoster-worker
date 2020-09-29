@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 module.exports.unlessRoute = function unlessRoute (path, middleware) {
     return function(req, res, next) {
         if (path.includes(req.url)) {

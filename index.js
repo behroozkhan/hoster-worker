@@ -40,6 +40,9 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         return;
     }
 
+    Object.keys(req.body).forEach(key => {
+        req.body[key] = JSON.parse(req.body[key]);
+    })
     console.log("req.body", req.body);
 
     const {username, websiteName, userId, publisherId, domainConfig, metadata, longProcessData} = req.body;

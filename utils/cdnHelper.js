@@ -1,8 +1,4 @@
-const exec = Promise.promisify(require('child_process').exec);
-let rimraf = require("rimraf");
-const fs = require('fs');
 const CDNInterface = require('./cdnInterface/cdnInterface');
-const fsPromises = fs.promises;
 
 let CDNHelper = {};
 

@@ -86,6 +86,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
             servicePorts
         }
     } catch (error) {
+        console.log("hostSiteZipFile error", error);
         return {
             success: false,
             error
@@ -181,6 +182,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
             success: true,
         }
     } catch (error) {
+        console.log("configNginx error", error);
         return {
             success: false,
             error
@@ -223,8 +225,10 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                     upstream_https: "http",
                 })
 
-                if (!createRecordResult.success)
+                if (!createRecordResult.success) {
+                    console.log("createRecord error", createRecordResult.error);
                     throw new Error('Failed on create new dns record ...');
+                }
             }
 
             let checkNSResult = await CDNInterface.checkDomainNS(domain);
@@ -239,8 +243,10 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
 
             let httpsResult = await CDNHelper.updateOrCreateHttps(domain);
 
-            if (!httpsResult.success)
+            if (!httpsResult.success) {
+                console.log("https error", httpsResult.error);
                 throw new Error("Failed on updateOrCreateHttps ...");
+            }
         }
         else 
         {
@@ -258,8 +264,10 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                     upstream_https: "http",
                 })
 
-                if (!createRecordResult.success)
+                if (!createRecordResult.success) {
+                    console.log("createRecord error", createRecordResult.error);
                     throw new Error('Failed on create new dns record ...');
+                }
 
                 // TODO host in public subdomain like websites.hoster.com
                 // TODO beacause creating new record may will be ready some hour later

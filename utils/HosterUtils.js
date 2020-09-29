@@ -29,6 +29,12 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         updateLongProcess(longProcessData, 'Copying website files ...', "running", {
             progress: 20
         });
+        
+        // TODO make it async in safe way
+        if (!fs.existsSync(`${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`)) 
+        {
+            fs.mkdirSync(`${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`, {recursive: true});
+        }
 
         let {
             success,

@@ -60,7 +60,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         });
 
         // turn of all old services from oldServicePorts
-        Object.values(oldServicePorts).forEach(port => {
+        Object.values(oldServicePorts).forEach(async (port) => {
             await execShellCommand(`fuser -k ${port}/tcp`);
         });
 

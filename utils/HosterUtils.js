@@ -232,7 +232,7 @@ HosterUtils.isFileChange = async (path, newData) => {
         return oldData === newData;
     } catch (error) {
         console.log("isFileChange 3 error", error)
-        return false;
+        return true;
     }
 };
 

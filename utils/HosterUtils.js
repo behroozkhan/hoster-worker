@@ -188,6 +188,16 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
             console.log("Configing nginx 6 ...");
             await fsPromises.writeFile(newConfPath, nginxTemplate, 'utf8');
 
+            
+            let confResult = await HosterUtils.execShellCommand(
+                `echo ${process.env.SUDO_PASSWORD} | sudo echo "${nginxTemplate}" > ${newConfPath}`
+            );
+    
+            if (!confResult.success) {
+                console.log("Failed on create nginx conf", confResult.error);
+                throw new Error("Failed on create nginx conf ...");
+            }
+
             if (!fs.existsSync(newConfLinkPath))  {
                 let linkResult = await HosterUtils.execShellCommand(
                     `echo ${process.env.SUDO_PASSWORD} | sudo ln -s ${newConfPath} ${newConfLinkPath}`

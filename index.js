@@ -92,7 +92,7 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     }
     
     console.log("Hosting Complete");
-    updateLongProcess(longProcessData, 'Website hosted successfully ...', "running", {
+    updateLongProcess(longProcessData, 'Website hosted successfully ...', "complete", {
         progress: 100,
         finalPath: hostResult.finalPath,
         url: cdnResult.url

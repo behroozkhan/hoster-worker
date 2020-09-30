@@ -211,7 +211,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
 
             console.log("Configing nginx 7 ...");
             let restartNginxResult = await HosterUtils.execShellCommand(
-                `echo ${process.env.SUDO_PASSWORD} | sudo -S nginx reload`
+                `echo ${process.env.SUDO_PASSWORD} | sudo -S systemctl reload nginx`
             );
     
             if (!restartNginxResult.success) {

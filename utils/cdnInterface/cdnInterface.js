@@ -55,7 +55,7 @@ CDNInterface.dnsRecordList = async (domain, {search, page, per_page}) => {
         let url = `${baseUrl}/domains/${domain}/dns-records`;
         let params = {search, page, per_page};
         let response = await axios.get(url, {
-            ...getOptions(), ...{params}
+            ...{params}, ...getOptions()
         });
 
         console.log("dnsRecordList respone: ", response);

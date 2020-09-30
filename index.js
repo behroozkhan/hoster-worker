@@ -26,6 +26,7 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage })
 
 app.post('/host', upload.single('siteZip'), async (req, res) => {
+    console.log("/host")
     // host a website and start its services
     const file = req.file;
 

@@ -17,17 +17,20 @@ HosterUtils.updateHosterData = () => {
 
 HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, metadata, longProcessData) => {
     try {
-        console.log("Copying files ...");
+        console.log("Copying files 1 ...");
         let newPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`;
         let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;
 
         // read current servicePorts.json file from `${finalPath}/servicePorts.json`
         let oldServicePorts = {};
+        console.log("Copying files 2 ...");
         if (fs.existsSync(`${finalPath}/servicePorts.json`))  {
+            console.log("Copying files 3 ...");
             let oldServicePortData = await fsPromises.readFile(`${finalPath}/servicePorts.json`, 'utf8')
             oldServicePorts = JSON.parse(oldServicePortData);
         }
     
+        console.log("Copying files 4 ...");
         updateLongProcess(longProcessData, 'Copying website files ...', "running", {
             progress: 20
         });
@@ -35,9 +38,11 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         // TODO make it async in safe way
         if (!fs.existsSync(`${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`)) 
         {
+            console.log("Copying files 5 ...");
             fs.mkdirSync(`${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`, {recursive: true});
         }
 
+        console.log("Copying files 6 ...");
         let {
             success,
             error
@@ -48,6 +53,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
             }
         );
 
+        console.log("Copying files 7 ...");
         if (!success) {
             console.log("Failed on mv", error);
             throw new Error("Failed on mv ...");
@@ -57,8 +63,10 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
             progress: 25
         });
 
+        console.log("Copying files 8 ...");
         let unzipResult = await HosterUtils.execShellCommand(`unzip ${newPath}`);
 
+        console.log("Copying files 9 ...");
         if (!unzipResult.success) {
             console.log("Failed on unzip", unzipResult.error);
             throw new Error("Failed on unzip ...");
@@ -66,6 +74,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
 
         await HosterUtils.removeFolder(newPath);
     
+        console.log("Copying files 10 ...");
         updateLongProcess(longProcessData, 'Start services ...', "running", {
             progress: 30
         });
@@ -74,11 +83,13 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         Object.values(oldServicePorts).forEach(async (port) => {
             await execShellCommand(`fuser -k ${port}/tcp`);
         });
+        console.log("Copying files 11 ...");
 
         // start services from metadata
         let servicePorts = {};
         let services = metadata.services || [];
         
+        console.log("Copying files 12 ...");
         services.forEach(async (service) => {
             let serviceResult = await HosterUtils.installService(service, `${finalPath}/services`);
             if (!serviceResult.success)
@@ -87,6 +98,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
             servicePorts[service.name] = serviceResult.port;
         });
 
+        console.log("Copying files 13 ...");
         // copy servicePorts to `${finalPath}/servicePorts.json`
         await fsPromises.writeFile(`${finalPath}/servicePorts.json`, JSON.stringify(servicePorts), 'utf8');
 

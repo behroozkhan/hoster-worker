@@ -20,6 +20,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         console.log("Copying files 1 ...");
         let newPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`;
         let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;
+        let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;
 
         // read current servicePorts.json file from `${finalPath}/servicePorts.json`
         let oldServicePorts = {};
@@ -47,7 +48,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
             success,
             error
         } = await HosterUtils.execShellCommand(
-            `mv ${file.filename} ${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`, 
+            `mv ${file.filename} ${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}/${websiteName}.zip`, 
             {
                 cwd: file.destination
             }
@@ -64,7 +65,9 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         });
 
         console.log("Copying files 8 ...");
-        let unzipResult = await HosterUtils.execShellCommand(`unzip ${newPath}`);
+        let unzipResult = await HosterUtils.execShellCommand(`unzip ${websiteName}.zip`, {
+            cwd: finalPath
+        });
 
         console.log("Copying files 9 ...");
         if (!unzipResult.success) {

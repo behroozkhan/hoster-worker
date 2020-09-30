@@ -40,7 +40,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
             success,
             error
         } = await HosterUtils.execShellCommand(
-            `mv ${file.filename} ${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`, 
+            `mv ${file.filename} ${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`, 
             {
                 cwd: file.destination
             }

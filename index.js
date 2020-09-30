@@ -7,7 +7,7 @@ let cors = require('cors');
 const HosterUtils = require('./utils/HosterUtils');
 const Response = require('./utils/response')
 let {
-    updateLongProcess,
+    updateLongProcess, waitForMilis,
 } = require('./utils/utils');
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -58,6 +58,7 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         metadata, longProcessData);
 
     if (!hostResult.success) {
+        await waitForMilis(500);
         updateLongProcess(longProcessData, 'Failed on host zip file ...', "failed", {
             progress: 20, error: hostResult.error
         });
@@ -72,6 +73,7 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         hostResult.finalPath, domainConfig, hostResult.servicePorts, longProcessData);
 
     if (!nginxResult.success) {
+        await waitForMilis(500);
         updateLongProcess(longProcessData, 'Failed on config nginx ...', "failed", {
             progress: 20, error: nginxResult.error
         });
@@ -85,6 +87,7 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     let cdnResult = await HosterUtils.configCDN(username, websiteName, domainConfig, longProcessData);
 
     if (!cdnResult.success) {
+        await waitForMilis(500);
         updateLongProcess(longProcessData, 'Failed on config CDN ...', "failed", {
             progress: 20, error: cdnResult.error
         });
@@ -92,6 +95,9 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     }
     
     console.log("Hosting Complete");
+
+    await waitForMilis(500);
+
     updateLongProcess(longProcessData, 'Website hosted successfully ...', "complete", {
         progress: 100,
         finalPath: hostResult.finalPath,

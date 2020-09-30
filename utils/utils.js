@@ -44,3 +44,11 @@ module.exports.updateLongProcess = function updateLongProcess({longProcessUrl, l
         console.log("update long process error: ", error);
     });
 };
+
+module.exports.waitForMilis = function waitForMilis(milis) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(() => {
+            resolve();
+        }, milis);
+    })
+}

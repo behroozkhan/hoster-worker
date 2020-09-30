@@ -239,7 +239,7 @@ HosterUtils.isFileChange = async (path, newData) => {
         console.log("isFileChange 1")
         let oldData = await fsPromises.readFile(path, 'utf8');
         console.log("isFileChange 2", oldData === newData)
-        return oldData === newData;
+        return oldData !== newData;
     } catch (error) {
         console.log("isFileChange 3 error", error)
         return true;

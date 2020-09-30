@@ -254,7 +254,9 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                 let createRecordResult = await CDNInterface.createDNSRecord(domain, {
                     type: 'a',
                     name: '@',
-                    value: process.env.IP,
+                    value: [{
+                        ip: process.env.IP
+                    }],
                     cloud: true,
                     upstream_https: "http",
                 })
@@ -294,7 +296,9 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                 let createRecordResult = await CDNInterface.createDNSRecord(domain, {
                     type: 'a',
                     name: subDomain,
-                    value: process.env.IP,
+                    value: [{
+                        ip: process.env.IP
+                    }],
                     cloud: true,
                     upstream_https: "http",
                 })

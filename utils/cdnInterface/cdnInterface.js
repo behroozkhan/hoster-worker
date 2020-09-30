@@ -6,7 +6,8 @@ let baseUrl = "https://napi.arvancloud.com/cdn/4.0";
 const getOptions = () => {
     return {
         headers: {
-            'Authorization': `${process.env.CDN_AUTH || authentication}`
+            'Authorization': `${process.env.CDN_AUTH || authentication}`,
+            'Content-Type': 'application/json'
         }
     }
 }

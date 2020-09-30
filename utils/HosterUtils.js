@@ -189,11 +189,8 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
             
             // await fsPromises.writeFile(newConfPath, nginxTemplate, 'utf8');
 
-            // let confResult = await HosterUtils.execShellCommand(
-                // `echo ${process.env.SUDO_PASSWORD} | sudo -S echo "${nginxTemplate}" > ${newConfPath}`
-            // );
             let confResult = await HosterUtils.execShellCommand(
-                `echo ${nginxTemplate} | sudo tee ${newConfPath}`
+                `echo "${nginxTemplate}" | sudo tee ${newConfPath}`
             );
     
             if (!confResult.success) {

@@ -186,8 +186,6 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         if (await HosterUtils.isFileChange(newConfPath, nginxTemplate)) {
             // Need to update conf and restart nginx
             console.log("Configing nginx 6 ...");
-            await fsPromises.writeFile(newConfPath, nginxTemplate, 'utf8');
-
             
             let confResult = await HosterUtils.execShellCommand(
                 `echo ${process.env.SUDO_PASSWORD} | sudo echo "${nginxTemplate}" > ${newConfPath}`

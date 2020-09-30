@@ -64,7 +64,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         });
 
         console.log("Copying files 8 ...");
-        let unzipResult = await HosterUtils.execShellCommand(`unzip ${websiteName}.zip`, {
+        let unzipResult = await HosterUtils.execShellCommand(`echo -A | unzip ${websiteName}.zip`, {
             cwd: finalPath
         });
 

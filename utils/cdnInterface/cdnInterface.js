@@ -55,7 +55,7 @@ CDNInterface.dnsRecordList = async (domain, {search, page, per_page}) => {
         let url = `${baseUrl}/domains/${domain}/dns-records`;
         let params = {search, page, per_page};
         let response = await axios.get(url, {
-            ...CDNInterface.getOptions(), ...{params}
+            ...getOptions(), ...{params}
         });
 
         console.log("dnsRecordList respone: ", response);
@@ -70,7 +70,7 @@ CDNInterface.createDNSRecord = async (domain, {type, name, value, ttl, cloud, up
     try {
         let url = `${baseUrl}/domains/${domain}/dns-records`;
         let body = {type, name, value, ttl, cloud, upstream_https, ip_filter_mode};
-        let response = await axios.post(url, body, CDNInterface.getOptions());
+        let response = await axios.post(url, body, getOptions());
 
         console.log("createDNSRecord respone: ", response);
         if (response.status === 201) {

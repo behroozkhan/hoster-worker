@@ -6,6 +6,7 @@ const CDNHelper = require('./cdnHelper');
 const CDNInterface = require('./cdnInterface/cdnInterface');
 const { updateLongProcess } = require('./utils');
 const fsPromises = fs.promises;
+var path = require('path');
 
 let HosterUtils = {};
 
@@ -139,8 +140,9 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
 
         let root = `${process.env.HOST_PATH}/${publisherId}_${userId}`;
 
-        let nginxTemplatePath = `${__dirname}/${process.env.BASEFILES_PATH}/nginxTemplate.conf`;
-        let nginxApiTemplatePath = `${__dirname}/${process.env.BASEFILES_PATH}/nginxApiTemplate.conf`;
+        
+        let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxTemplate.conf');
+        let nginxApiTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxApiTemplate.conf');
 
         let nginxTemplate = await fsPromises.readFile(nginxTemplatePath, 'utf8');
         let nginxApiTemplate = await fsPromises.readFile(nginxApiTemplatePath, 'utf8');

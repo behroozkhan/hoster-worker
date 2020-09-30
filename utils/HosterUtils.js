@@ -17,6 +17,7 @@ HosterUtils.updateHosterData = () => {
 
 HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, metadata, longProcessData) => {
     try {
+        console.log("Copying files ...");
         let newPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`;
         let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;
 
@@ -89,6 +90,7 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         // copy servicePorts to `${finalPath}/servicePorts.json`
         await fsPromises.writeFile(`${finalPath}/servicePorts.json`, JSON.stringify(servicePorts), 'utf8');
 
+        console.log("Copying files complete");
         return {
             success: true,
             finalPath,
@@ -123,6 +125,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
     domainConfig, servicePorts, longProcessData) => 
 {
     try {
+        console.log("Configing nginx 1 ...");
         let serverName = "";
         if (domainConfig.domainData) {
             // user has own domain
@@ -139,14 +142,15 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         });
 
         let root = `${process.env.HOST_PATH}/${publisherId}_${userId}`;
-
         
+        console.log("Configing nginx 2 ...");
         let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxTemplate.conf');
         let nginxApiTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxApiTemplate.conf');
 
         let nginxTemplate = await fsPromises.readFile(nginxTemplatePath, 'utf8');
         let nginxApiTemplate = await fsPromises.readFile(nginxApiTemplatePath, 'utf8');
 
+        console.log("Configing nginx 3 ...");
         let serviceRules = "";
         Object.keys(servicePorts).forEach(serviceName => {
             let conf = nginxApiTemplate;
@@ -155,16 +159,19 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
             serviceRules += `${conf} \n`;
         })
 
+        console.log("Configing nginx 4 ...");
         nginxTemplate = nginxTemplate.replace(/{root}/g, root);
         nginxTemplate = nginxTemplate.replace(/{serverName}/g, serverName);
         nginxTemplate = nginxTemplate.replace(/{serviceRules}/g, serviceRules);
 
+        console.log("Configing nginx 5 ...");
         let confName = `${serverName}.${websiteName}.conf`;
         let newConfPath = `${process.env.NGINX_CONFS_PATH}/sites-available/${confName}`;
         let newConfLinkPath = `${process.env.NGINX_CONFS_PATH}/sites-enabled/${confName}`;
 
         if (await HosterUtils.isFileChange(newConfPath, nginxTemplate)) {
             // Need to update conf and restart nginx
+            console.log("Configing nginx 6 ...");
             await fsPromises.writeFile(newConfPath, nginxTemplate, 'utf8');
 
             if (!fs.existsSync(newConfLinkPath))  {
@@ -178,6 +185,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
                 }
             }
 
+            console.log("Configing nginx 7 ...");
             let restartNginxResult = await HosterUtils.execShellCommand(
                 `echo ${process.env.SUDO_PASSWORD} | sudo -S nginx reload`
             );
@@ -188,6 +196,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
             }
         }
 
+        console.log("Configing nginx complete");
         return {
             success: true,
         }
@@ -211,6 +220,7 @@ HosterUtils.isFileChange = async (path, newData) => {
 
 HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessData) => {
     try {
+        console.log("Configing CDN 1 ...");
         let serverName = "";
         let domain = "";
         let subDomain = username;
@@ -260,6 +270,7 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
         }
         else 
         {
+            console.log("Configing CDN 2 ...");
             // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
             serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
             domain = domainConfig.publisherWebsiteDomain;
@@ -273,6 +284,7 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                     cloud: true,
                     upstream_https: "http",
                 })
+                console.log("Configing CDN 3 ...");
 
                 if (!createRecordResult.success) {
                     console.log("createRecord error", createRecordResult.error);
@@ -284,6 +296,7 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
             }
         }
 
+        console.log("Configing CDN complete");
         return {
             success: true,
             url

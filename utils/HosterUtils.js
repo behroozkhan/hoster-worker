@@ -20,7 +20,6 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         console.log("Copying files 1 ...");
         let newPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`;
         let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;
-        let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;
 
         // read current servicePorts.json file from `${finalPath}/servicePorts.json`
         let oldServicePorts = {};

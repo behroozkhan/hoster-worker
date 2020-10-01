@@ -105,11 +105,11 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         await fsPromises.writeFile(`${finalPath}/servicePorts.json`, JSON.stringify(servicePorts), 'utf8');
 
         // set data in a json file in public folder, that provide production view for editor
-        await fsPromises.writeFile(`${finalPath}/public/json/env.json`, JSON.stringify({
+        await fsPromises.writeFile(`${finalPath}/static/json/env.json`, JSON.stringify({
             value: "production"
         }), 'utf8');
         // set siteData in a json in public folder
-        await fsPromises.writeFile(`${finalPath}/public/json/siteData.json`, 
+        await fsPromises.writeFile(`${finalPath}/static/json/siteData.json`, 
             JSON.stringify(metadata.siteData), 'utf8');
 
         console.log("Copying files complete");

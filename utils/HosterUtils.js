@@ -17,6 +17,7 @@ HosterUtils.updateHosterData = () => {
 
 HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, metadata, longProcessData) => {
     try {
+        websiteName = websiteName.toLowerCase();
         console.log("Copying files 1 ...");
         let newPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}.zip`;
         let finalPath = `${process.env.HOST_PATH}/${publisherId}_${userId}/${websiteName}`;

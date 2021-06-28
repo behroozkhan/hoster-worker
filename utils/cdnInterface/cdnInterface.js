@@ -26,15 +26,53 @@ CDNInterface.getListOfDomains = async () => {
 }
 
 CDNInterface.createNewDomain = async (domain) => {
-    
+    try {
+        let url = `${baseUrl}/domains/dns-service`;
+        let response = await axios.post(url, {domain}, {
+            ...getOptions()
+        });
+
+        console.log("createNewDomain respone: ", response);
+        if (response.status === 201) {
+            return {success: true, result: response.data};
+        } else {
+            return {success: false, result: response.data};
+        }
+    } catch (error) {
+        console.log("createNewDomain error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.getDomainInfo = async (domain) => {
-    
+    try {
+        let url = `${baseUrl}/domains/${domain}`;
+        let response = await axios.get(url, {
+            ...getOptions()
+        });
+
+        console.log("getDomainInfo respone: ", response);
+        return {success: true, result: response.data};
+    } catch (error) {
+        console.log("getDomainInfo error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.removeDomain = async (domain, domainId) => {
-    
+    try {
+        let url = `${baseUrl}/domains/${domain}/dns-records`;
+        let params = {id: domainId};
+        let response = await axios.delete(url, {
+            ...{params}, ...getOptions()
+        });
+
+        console.log("dnsRecordList respone: ", response);
+        return {success: true, result: response.data};
+    } catch (error) {
+        console.log("dnsRecordList error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.getCDNNS = async (domain) => {
@@ -42,7 +80,18 @@ CDNInterface.getCDNNS = async (domain) => {
 }
 
 CDNInterface.checkDomainNS = async (domain) => {
-    
+    try {
+        let url = `${baseUrl}/domains/${domain}/ns-keys/check`;
+        let response = await axios.get(url, {
+            ...getOptions()
+        });
+
+        console.log("checkDomainNS respone: ", response);
+        return {success: true, result: response.data};
+    } catch (error) {
+        console.log("checkDomainNS error", error);
+        return {success: false, error};
+    }
 }
 // TODO Domain
 
@@ -122,16 +171,61 @@ CDNInterface.purgeCache = async (domain, purge, purge_urls) => {
 }
 
 CDNInterface.getHttpsSetting = async (domain) => {
-    
+    try {
+        let url = `${baseUrl}/domains/${domain}/https`;
+        let response = await axios.get(url, {
+            ...getOptions()
+        });
+
+        console.log("getHttpsSetting respone: ", response);
+        if (response.status === 200) {
+            return {success: true, result: response.data};
+        } else {
+            return {success: false, result: response.data};
+        }
+    } catch (error) {
+        console.log("getHttpsSetting error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.updateHttpsSetting = async (domain, {f_ssl_type, f_ssl_hsts, f_ssl_max_age,
-    f_ssl_subdomain, f_ssl_preload, f_ssl_redirect, replace_http}) => {
-    
+    f_ssl_subdomain, f_ssl_preload, f_ssl_redirect, replace_http}) =>
+{
+    try {
+        let url = `${baseUrl}/domains/${domain}/https/status`;
+        let body = {f_ssl_type, f_ssl_hsts, f_ssl_max_age,
+            f_ssl_subdomain, f_ssl_preload, f_ssl_redirect, replace_http};
+        let response = await axios.patch(url, body, getOptions());
+
+        console.log("updateHttpsSetting respone: ", response);
+        if (response.status === 200) {
+            return {success: true};
+        } else {
+            return {success: false};
+        }
+    } catch (error) {
+        console.log("updateHttpsSetting error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.updateHttpsStatus = async (domain, status) => {
-    
+    try {
+        let url = `${baseUrl}/domains/${domain}/https/status`;
+        let body = {f_ssl_status: status};
+        let response = await axios.patch(url, body, getOptions());
+
+        console.log("updateHttpsStatus respone: ", response);
+        if (response.status === 200) {
+            return {success: true};
+        } else {
+            return {success: false};
+        }
+    } catch (error) {
+        console.log("updateHttpsStatus error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.renewSSLCertificate = async (domain) => {

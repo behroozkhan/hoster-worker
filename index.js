@@ -14,6 +14,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 app.options('*', cors());
 
+let cdn = require('./routes/cdn.js');
+app.use('/cdn', cdn)
+
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads')

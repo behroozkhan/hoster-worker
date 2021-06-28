@@ -150,9 +150,9 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
     try {
         console.log("Configing nginx 1 ...");
         let serverName = "";
-        if (domainConfig.domainData) {
+        if ((domainConfig.domainData || []).length > 0) {
             // user has own domain
-            serverName = `${domainConfig.domainData.domain}`;
+            serverName = domainConfig.domainData.map(d => d.domainName).join(" ");
         }
         else 
         {
@@ -267,44 +267,41 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
             progress: 55
         });
 
-        if (domainConfig.domainData) {
+        let activeDomains = (domainConfig.domainData || []).filter(d => {
+            return d.active;
+        })
+
+        if (activeDomains.length > 0) {
             // user has own domain
-            serverName = `${domainConfig.domainData.domain}`;
-            domain = serverName;
-            url = domain;
+            // serverName = `${domainConfig.domainData.domain}`;
+            // serverName = domainConfig.domainData.map(d => d.domainName).join(" ");
+            for (let i = 0 ; i < activeDomains.length; i++) {
+                let domain = activeDomains[i].domainName;
 
-            if (!await CDNHelper.cdnRecordExist(domain, '@')) {
-                let createRecordResult = await CDNInterface.createDNSRecord(domain, {
-                    type: 'a',
-                    name: '@',
-                    value: [{
-                        ip: process.env.IP
-                    }],
-                    cloud: true,
-                    upstream_https: "http",
-                })
+                url = domain;
 
-                if (!createRecordResult.success) {
-                    console.log("createRecord error", createRecordResult.error);
-                    throw new Error('Failed on create new dns record ...');
+                if (!await CDNHelper.domainExist(domain)) {
+                    throw new Error('Domain is not exist ...');
                 }
-            }
 
-            let checkNSResult = await CDNInterface.checkDomainNS(domain);
+                // let checkNSResult = await CDNInterface.checkDomainNS(domain);
 
-            if (checkNSResult.success) {
-                // remove old address
+                // if (checkNSResult.success) {
+                // remove old address based on publiher subdomain address
                 let dnsRecord = await CDNHelper.cdnRecordExist(domainConfig.publisherWebsiteDomain, subDomain);
                 if (dnsRecord) {
                     await CDNInterface.removeDNSRecord(domain, dnsRecord.id);
                 }
-            }
+                // }
 
-            let httpsResult = await CDNHelper.updateOrCreateHttps(domain);
+                let httpsResult = await CDNHelper.updateOrCreateHttps(domain);
 
-            if (!httpsResult.success) {
-                console.log("https error", httpsResult.error);
-                throw new Error("Failed on updateOrCreateHttps ...");
+                if (!httpsResult.success) {
+                    console.log("https error", httpsResult.error);
+                    throw new Error("Failed on updateOrCreateHttps ...");
+                }
+
+                // TODO add object storage Cname
             }
         }
         else 
@@ -331,9 +328,6 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                     console.log("createRecord error", createRecordResult.error);
                     throw new Error('Failed on create new dns record ...');
                 }
-
-                // TODO host in public subdomain like websites.hoster.com
-                // TODO beacause creating new record may will be ready some hour later
             }
         }
 
@@ -350,7 +344,6 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
         }
     }
 };
-
 
 HosterUtils.removeFolder = (path) => {
     return new Promise(function (resolve, reject) {

@@ -21,17 +21,38 @@ CDNHelper.cdnRecordExist = async (domain, exactSearch) => {
     }
 };
 
+CDNHelper.domainExist = async (domain) => {
+    try{
+        let {success, result} = await CDNInterface.getDomainInfo(domain);
+        
+        if (!success) {
+            throw new Error("dnsRecordList error ...");
+        }
+
+        return result.id;
+    } catch (error) {
+        console.log("cdnRecordExist error", error);
+        return false;
+    }
+};
+
 CDNHelper.updateOrCreateHttps = async (domain) => {
     try{
         let result = await CDNInterface.getHttpsSetting(domain);
 
-        if (!result)
+        if (!result.success)
             throw new Error('Failed on get https setting');
         
         if (result.data.f_ssl_status !== 'on') {
+            let updateStatusResult = await CDNInterface.updateHttpsStatus(domain, "on");
+
+            if (!updateStatusResult.success)
+                throw new Error('Failed on update https status');
+
             let updateResult = await CDNInterface.updateHttpsSetting(domain, {
                 f_ssl_type: 'arvan',
-                f_ssl_status: 'on',
+                f_ssl_subdomain: true,
+                f_ssl_redirect: true
             });
             
             if (!updateResult.success)

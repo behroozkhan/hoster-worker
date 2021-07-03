@@ -177,7 +177,6 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         let serviceRules = "";
         Object.keys(servicePorts).forEach(serviceName => {
             let conf = nginxApiTemplate;
-            conf = conf.replace(/{websiteName}/g, websiteName);
             conf = conf.replace(/{serviceName}/g, serviceName);
             conf = conf.replace(/{servicePort}/g, servicePorts[serviceName]);
             serviceRules += `${conf} \n`;
@@ -185,6 +184,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
 
         console.log("Configing nginx 4 ...");
         nginxTemplate = nginxTemplate.replace(/{root}/g, root);
+        nginxTemplate = nginxTemplate.replace(/{websiteName}/g, websiteName);
         nginxTemplate = nginxTemplate.replace(/{serverName}/g, serverName);
         nginxTemplate = nginxTemplate.replace(/{serviceRules}/g, serviceRules);
 

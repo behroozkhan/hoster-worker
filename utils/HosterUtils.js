@@ -184,7 +184,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
 
         console.log("Configing nginx 4 ...");
         nginxTemplate = nginxTemplate.replace(/{root}/g, root);
-        nginxTemplate = nginxTemplate.replace(/{websiteName}/g, websiteName);
+        nginxTemplate = nginxTemplate.replace(/{websiteName}/g, websiteName.toLowerCase());
         nginxTemplate = nginxTemplate.replace(/{serverName}/g, serverName);
         nginxTemplate = nginxTemplate.replace(/{serviceRules}/g, serviceRules);
 

@@ -177,6 +177,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         let serviceRules = "";
         Object.keys(servicePorts).forEach(serviceName => {
             let conf = nginxApiTemplate;
+            conf = conf.replace(/{websiteName}/g, websiteName);
             conf = conf.replace(/{serviceName}/g, serviceName);
             conf = conf.replace(/{servicePort}/g, servicePorts[serviceName]);
             serviceRules += `${conf} \n`;

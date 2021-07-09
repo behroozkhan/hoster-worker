@@ -337,11 +337,10 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                     type: 'CNAME',
                     name: storageSubDomain,
                     value: [{
-                        host: "weblancermainstorage.s3.ir-thr-at1.arvanstorage.com.", // TODO make it dynamic
-                        host_header: "source"
+                        host: "weblancermainstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
+                        host_header: "dest"
                     }],
                     cloud: true,
-                    upstream_https: "default"
                 });
 
                 if (!createStorageRecordResult.success) {

@@ -341,7 +341,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                         host_header: "source"
                     }],
                     cloud: true,
-                    ttl: 120
+                    upstream_https: "http"
                 });
 
                 if (!createStorageRecordResult.success) {

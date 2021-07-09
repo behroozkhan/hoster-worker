@@ -46,7 +46,8 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         req.body[key] = JSON.parse(req.body[key]);
     })
 
-    const {username, websiteName, userId, publisherId, domainConfig, metadata, longProcessData} = req.body;
+    const {username, websiteName, websiteId, userId, 
+        publisherId, domainConfig, metadata, longProcessData} = req.body;
 
     res.json(
         new Response(true, {
@@ -88,7 +89,8 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         progress: 80
     });
     
-    let cdnResult = await HosterUtils.configCDN(username, websiteName, domainConfig, longProcessData);
+    let cdnResult = await HosterUtils.configCDN(username, websiteName, websiteId, 
+        userId, publisherId, domainConfig, longProcessData);
 
     if (!cdnResult.success) {
         await waitForMilis(500);

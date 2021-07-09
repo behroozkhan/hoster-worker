@@ -157,7 +157,9 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         else 
         {
             // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
-            serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
+            // serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
+            let url = new URL(domainConfig.tempDomain.targetUrl);
+            serverName = url.hostname;
         }
     
         updateLongProcess(longProcessData, 'Configing domain ...', "running", {
@@ -256,7 +258,9 @@ HosterUtils.isFileChange = async (path, newData) => {
     }
 };
 
-HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessData) => {
+HosterUtils.configCDN = async (username, websiteName, websiteId, 
+    userId, publisherId, domainConfig, longProcessData) => 
+{
     try {
         console.log("Configing CDN 1 ...");
         let serverName = "";
@@ -274,8 +278,6 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
 
         if (activeDomains.length > 0) {
             // user has own domain
-            // serverName = `${domainConfig.domainData.domain}`;
-            // serverName = domainConfig.domainData.map(d => d.domainName).join(" ");
             for (let i = 0 ; i < activeDomains.length; i++) {
                 let domain = activeDomains[i].domainName;
 
@@ -285,14 +287,10 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                     throw new Error('Domain is not exist ...');
                 }
 
-                // let checkNSResult = await CDNInterface.checkDomainNS(domain);
-
-                // if (checkNSResult.success) {
                 // remove old address based on publiher subdomain address
-                let dnsRecord = await CDNHelper.cdnRecordExist(domainConfig.publisherWebsiteDomain, subDomain);
-                if (dnsRecord) {
-                    await CDNInterface.removeDNSRecord(domain, dnsRecord.id);
-                }
+                // let dnsRecord = await CDNHelper.cdnRecordExist(domainConfig.publisherWebsiteDomain, subDomain);
+                // if (dnsRecord) {
+                //     await CDNInterface.removeDNSRecord(domain, dnsRecord.id);
                 // }
 
                 let httpsResult = await CDNHelper.updateOrCreateHttps(domain);
@@ -310,7 +308,8 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
             console.log("Configing CDN 2 ...");
             // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
             serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
-            domain = domainConfig.publisherWebsiteDomain;
+            // domain = domainConfig.publisherWebsiteDomain;
+            domain = domainConfig.tempDomain.publisherTempDomain;
             url = `${serverName}/${websiteName}`;
 
             if (!await CDNHelper.cdnRecordExist(domain, subDomain)) {
@@ -328,6 +327,22 @@ HosterUtils.configCDN = async (username, websiteName, domainConfig, longProcessD
                 if (!createRecordResult.success) {
                     console.log("createRecord error", createRecordResult.error);
                     throw new Error('Failed on create new dns record ...');
+                }
+
+                let storageSubDomain = `${websiteName}storage${username}`;
+                let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
+                    type: 'cname',
+                    name: storageSubDomain,
+                    value: [{
+                        host: "weblancermainstorage.s3.ir-thr-at1.arvanstorage.com.",
+                        host_header: "dest"
+                    }],
+                    cloud: true,
+                });
+
+                if (!createStorageRecordResult.success) {
+                    console.log("createStorageRecord error", createRecordResult.error);
+                    throw new Error('Failed on create new storage dns record ...');
                 }
             }
         }

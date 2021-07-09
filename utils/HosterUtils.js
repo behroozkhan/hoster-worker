@@ -329,8 +329,10 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                     console.log("createRecord error", createRecordResult.error);
                     throw new Error('Failed on create new dns record ...');
                 }
-
-                let storageSubDomain = `${websiteName}storage${username}`;
+            }
+            
+            let storageSubDomain = `${websiteName}storage${username}`;
+            if (!await CDNHelper.cdnRecordExist(domain, storageSubDomain)) {
                 let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
                     type: 'cname',
                     name: storageSubDomain,

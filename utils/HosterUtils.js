@@ -191,7 +191,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         nginxTemplate = nginxTemplate.replace(/{serviceRules}/g, serviceRules);
 
         console.log("Configing nginx 5 ...");
-        let confName = `${serverName}.${websiteName}.conf`;
+        let confName = `${serverName}.conf`;
         let newConfPath = `${process.env.NGINX_CONFS_PATH}/sites-available/${confName}`;
         let newConfLinkPath = `${process.env.NGINX_CONFS_PATH}/sites-enabled/${confName}`;
 

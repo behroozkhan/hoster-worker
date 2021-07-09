@@ -337,7 +337,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                     type: 'cname',
                     name: storageSubDomain,
                     value: {
-                        host: "weblancermainstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
+                        host: "weblancerstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
                         host_header: "dest"
                     },
                     cloud: true

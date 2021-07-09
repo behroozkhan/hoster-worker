@@ -344,7 +344,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                 });
 
                 if (!createStorageRecordResult.success) {
-                    console.log("createStorageRecord error", createRecordResult.error);
+                    console.log("createStorageRecord error", createStorageRecordResult.error);
                     throw new Error('Failed on create new storage dns record ...');
                 }
             }

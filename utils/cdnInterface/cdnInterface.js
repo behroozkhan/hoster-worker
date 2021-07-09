@@ -108,7 +108,6 @@ CDNInterface.dnsRecordList = async (domain, {search, page, per_page}) => {
             ...{params}, ...getOptions()
         });
 
-        console.log("dnsRecordList respone: ", response);
         return {success: true, result: response.data};
     } catch (error) {
         console.log("dnsRecordList error", error);

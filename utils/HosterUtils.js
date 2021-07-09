@@ -307,10 +307,11 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
         {
             console.log("Configing CDN 2 ...");
             // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
-            serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
+            // serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
             // domain = domainConfig.publisherWebsiteDomain;
             domain = domainConfig.tempDomain.publisherTempDomain;
-            url = `${serverName}/${websiteName}`;
+            // url = `${serverName}/${websiteName}`;
+            url = domainConfig.tempDomain.targetUrl;
 
             if (!await CDNHelper.cdnRecordExist(domain, subDomain)) {
                 let createRecordResult = await CDNInterface.createDNSRecord(domain, {

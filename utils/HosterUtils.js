@@ -336,12 +336,11 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                 let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
                     type: 'cname',
                     name: storageSubDomain,
-                    value: [{
+                    value: {
                         host: "weblancermainstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
                         host_header: "dest"
-                    }],
-                    cloud: true,
-                    ttl: 120
+                    },
+                    cloud: true
                 });
 
                 if (!createStorageRecordResult.success) {

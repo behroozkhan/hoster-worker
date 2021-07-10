@@ -7,7 +7,7 @@ let router = express.Router();
 const bodyParser= require('body-parser');
 let jsonParser = bodyParser.json()
 
-router.post('/createdomain', async (req, res) => {
+router.post('/createdomain', jsonParser, async (req, res) => {
     let {domain} = req.body;
 
     let {success} = await CDNInterface.createNewDomain(domain);
@@ -26,7 +26,7 @@ router.post('/createdomain', async (req, res) => {
     );
 })
 
-router.post('/getdomainstatus', async (req, res) => {
+router.post('/getdomainstatus', jsonParser, async (req, res) => {
     let {domain} = req.body;
 
     let {success, result} = await CDNInterface.getDomainInfo(domain);
@@ -46,7 +46,7 @@ router.post('/getdomainstatus', async (req, res) => {
     );
 })
 
-router.post('/checkns', async (req, res) => {
+router.post('/checkns', jsonParser, async (req, res) => {
     let {domain} = req.body;
 
     let {success, result} = await CDNInterface.checkDomainNS(domain);
@@ -65,7 +65,7 @@ router.post('/checkns', async (req, res) => {
     );
 })
 
-router.post('/removedomain', async (req, res) => {
+router.post('/removedomain', jsonParser, async (req, res) => {
     let {domain} = req.body;
 
     let {success, result} = await CDNInterface.getDomainInfo(domain);
@@ -94,7 +94,7 @@ router.post('/removedomain', async (req, res) => {
     );
 })
 
-router.post('/trafficusage', async (req, res) => {
+router.post('/trafficusage', jsonParser, async (req, res) => {
     let {domainConfig, start, end} = req.body;
 
     let sumTraffic = 0;
@@ -187,6 +187,8 @@ router.post('/resolvestoragedns', jsonParser, async (req, res) => {
             throw new Error('Failed on create new storage dns record ...');
         }
     }
+
+    console.log("resolvestoragedns response send")
 
     res.json(
         new Response(true, {

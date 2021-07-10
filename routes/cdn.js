@@ -4,6 +4,8 @@ const CDNInterface = require('../utils/cdnInterface/cdnInterface');
 
 let express = require('express');
 let router = express.Router();
+const bodyParser= require('body-parser');
+let jsonParser = bodyParser.json()
 
 router.post('/createdomain', async (req, res) => {
     let {domain} = req.body;
@@ -163,9 +165,9 @@ router.post('/trafficusage', async (req, res) => {
     );
 })
 
-router.post('/resolvestoragedns', async (req, res) => {
+router.post('/resolvestoragedns', jsonParser, async (req, res) => {
     let {domainConfig} = req.body;
-    console.log("resolvestoragedns", req)
+    console.log("resolvestoragedns", req.body)
 
     let storageSubDomain = domainConfig.tempDomain.storageSubDomain;
     let domain = domainConfig.tempDomain.publisherTempDomain;

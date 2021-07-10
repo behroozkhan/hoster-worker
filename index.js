@@ -10,7 +10,7 @@ let {
     updateLongProcess, waitForMilis,
 } = require('./utils/utils');
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
 app.use(cors());
 app.options('*', cors());
 

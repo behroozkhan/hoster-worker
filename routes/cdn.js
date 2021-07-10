@@ -166,8 +166,8 @@ router.post('/trafficusage', async (req, res) => {
 router.post('/resolvestoragedns', async (req, res) => {
     let {domainConfig} = req.body;
 
-    let storageSubDomain = tempDomain.tempDomain.storageSubDomain;
-    let domain = tempDomain.tempDomain.publisherTempDomain;
+    let storageSubDomain = domainConfig.tempDomain.storageSubDomain;
+    let domain = domainConfig.tempDomain.publisherTempDomain;
     if (!await CDNHelper.cdnRecordExist(domain, storageSubDomain)) {
         let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
             type: 'cname',

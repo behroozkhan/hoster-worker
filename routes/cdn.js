@@ -165,7 +165,7 @@ router.post('/trafficusage', async (req, res) => {
 
 router.post('/resolvestoragedns', async (req, res) => {
     let {domainConfig} = req.body;
-    console.log("resolvestoragedns", req.body)
+    console.log("resolvestoragedns", req)
 
     let storageSubDomain = domainConfig.tempDomain.storageSubDomain;
     let domain = domainConfig.tempDomain.publisherTempDomain;

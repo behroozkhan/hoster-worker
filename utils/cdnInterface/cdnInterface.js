@@ -234,7 +234,18 @@ CDNInterface.renewSSLCertificate = async (domain) => {
 
 // TODO Report
 CDNInterface.getTrafficReport = async (domain, period, since, until, filterSubdomain) => {
-    
+    try {
+        let url = `${baseUrl}/domains/${domain}/reports/traffics`;
+        let params = {period, since, until, "filter.subdomain": filterSubdomain};
+        let response = await axios.get(url, {
+            ...{params}, ...getOptions()
+        });
+
+        return {success: true, result: response.data};
+    } catch (error) {
+        console.log("dnsRecordList error", error);
+        return {success: false, error};
+    }
 }
 
 CDNInterface.getVisitorReport = async (domain, period, since, until, filterSubdomain) => {

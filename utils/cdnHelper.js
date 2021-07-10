@@ -70,4 +70,19 @@ CDNHelper.updateOrCreateHttps = async (domain) => {
     }
 };
 
+CDNHelper.getDomainUsage = async (domain, subdomain, start, end) => {
+    try{
+        let {success, result} = await CDNInterface.getTrafficReport(domain, undefined, start, end, subdomain);
+        
+        if (!success) {
+            throw new Error("dnsRecordList error ...");
+        }
+
+        return {success, result};
+    } catch (error) {
+        console.log("cdnRecordExist error", error);
+        return {success: false, error};
+    }
+};
+
 module.exports = CDNHelper;

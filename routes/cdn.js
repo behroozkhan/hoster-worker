@@ -26,6 +26,24 @@ router.post('/createdomain', jsonParser, async (req, res) => {
     );
 })
 
+router.post('/cdnrecordexist', jsonParser, async (req, res) => {
+    let {domain, subdomain} = req.body;
+
+    try{
+        let exist = await CDNHelper.cdnRecordExist(domain, subdomain);
+
+        res.json(
+            new Response(true, {exist}).json()
+        );
+    } catch (error) {
+        console.log("dnsrecordexist", error);
+        res.status(500).json(
+            new Response(false, {error}, "Server error").json()
+        );
+        return;
+    }
+})
+
 router.post('/getdomainstatus', jsonParser, async (req, res) => {
     let {domain} = req.body;
 

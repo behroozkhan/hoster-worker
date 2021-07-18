@@ -14,7 +14,7 @@ router.post('/createdomain', jsonParser, async (req, res) => {
 
     if (!success){
         res.status(500).json(
-            new Response(false, result.status, 
+            new Response(false, result, 
                 "Can't create domain"
             ).json()
         );

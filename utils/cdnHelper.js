@@ -43,6 +43,7 @@ CDNHelper.updateOrCreateHttps = async (domain) => {
         if (!result.success)
             throw new Error('Failed on get https setting');
         
+            console.log("updateOrCreateHttps", result)
         if (result.data.f_ssl_status !== 'on') {
             let updateStatusResult = await CDNInterface.updateHttpsStatus(domain, "on");
 

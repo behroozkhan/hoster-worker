@@ -107,7 +107,7 @@ CDNInterface.dnsSummery = async (domain) => {
     
 }
 
-CDNInterface.dnsRecordList = async (domain, {search, page = 0, per_page = 9999999}) => {
+CDNInterface.dnsRecordList = async (domain, {search, page, per_page}) => {
     try {
         let url = `${baseUrl}/domains/${domain}/dns-records`;
         let params = {search, page, per_page};

@@ -199,7 +199,7 @@ CDNInterface.updateHttpsSetting = async (domain, {f_ssl_type, f_ssl_hsts, f_ssl_
     f_ssl_subdomain, f_ssl_preload, f_ssl_redirect, replace_http}) =>
 {
     try {
-        let url = `${baseUrl}/domains/${domain}/https/status`;
+        let url = `${baseUrl}/domains/${domain}/https`;
         let body = {f_ssl_type, f_ssl_hsts, f_ssl_max_age,
             f_ssl_subdomain, f_ssl_preload, f_ssl_redirect, replace_http};
         let response = await axios.patch(url, body, getOptions());

@@ -235,8 +235,10 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         if ((domainConfig.domainData || []).length > 0) {
             // user has own domain
             domainConfig.domainData.forEach(async (d) => {
-                serverName = d.domainName;
-                await todo(serverName, true);
+                if (d.active) {
+                    serverName = d.domainName;
+                    await todo(serverName, true);
+                }
             });
         }
         

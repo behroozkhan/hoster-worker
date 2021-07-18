@@ -324,7 +324,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
     
                     if (!createRecordResult.success) {
                         console.log("createRecord error", createRecordResult.error);
-                        throw new Error('Failed on create new dns record ...');
+                        // throw new Error('Failed on create new dns record ...');
                     }
                 }
 

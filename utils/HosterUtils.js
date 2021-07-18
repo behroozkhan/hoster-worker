@@ -149,89 +149,96 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
 {
     try {
         console.log("Configing nginx 1 ...");
+        
+        let todo = async (serverName) => {
+            let root = `${process.env.HOST_PATH}/${publisherId}_${userId}`;
+        
+            console.log("Configing nginx 2 ...");
+            let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxTemplateTemp.conf');
+            let nginxApiTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxApiTemplate.conf');
+    
+            let nginxTemplate = await fsPromises.readFile(nginxTemplatePath, 'utf8');
+            let nginxApiTemplate = await fsPromises.readFile(nginxApiTemplatePath, 'utf8');
+    
+            console.log("Configing nginx 3 ...");
+            let serviceRules = "";
+            Object.keys(servicePorts).forEach(serviceName => {
+                let conf = nginxApiTemplate;
+                conf = conf.replace(/{serviceName}/g, serviceName);
+                conf = conf.replace(/{servicePort}/g, servicePorts[serviceName]);
+                serviceRules += `${conf} \n`;
+            })
+    
+            console.log("Configing nginx 4 ...");
+            nginxTemplate = nginxTemplate.replace(/{root}/g, root);
+            nginxTemplate = nginxTemplate.replace(/{websiteName}/g, websiteName.toLowerCase());
+            nginxTemplate = nginxTemplate.replace(/{serverName}/g, serverName);
+            nginxTemplate = nginxTemplate.replace(/{serviceRules}/g, serviceRules);
+    
+            console.log("Configing nginx 5 ...");
+            let confName = `${serverName}.conf`;
+            let newConfPath = `${process.env.NGINX_CONFS_PATH}/sites-available/${confName}`;
+            let newConfLinkPath = `${process.env.NGINX_CONFS_PATH}/sites-enabled/${confName}`;
+    
+            if (await HosterUtils.isFileChange(newConfPath, nginxTemplate)) {
+                // Need to update conf and restart nginx
+                console.log("Configing nginx 6 ...");
+                
+                // await fsPromises.writeFile(newConfPath, nginxTemplate, 'utf8');
+    
+                let confResult = await HosterUtils.execShellCommand(
+                    `echo "${nginxTemplate}" | sudo tee ${newConfPath}`
+                );
+        
+                if (!confResult.success) {
+                    console.log("Failed on create nginx conf", confResult.error);
+                    throw new Error("Failed on create nginx conf ...");
+                }
+    
+                if (!fs.existsSync(newConfLinkPath))  {
+                    let linkResult = await HosterUtils.execShellCommand(
+                        `echo ${process.env.SUDO_PASSWORD} | sudo ln -s ${newConfPath} ${newConfLinkPath}`
+                    );
+            
+                    if (!linkResult.success) {
+                        console.log("Failed on linking nginx conf", linkResult.error);
+                        throw new Error("Failed on linking nginx conf ...");
+                    }
+                }
+    
+                console.log("Configing nginx 7 ...");
+                let restartNginxResult = await HosterUtils.execShellCommand(
+                    `echo ${process.env.SUDO_PASSWORD} | sudo -S systemctl reload nginx`
+                );
+        
+                if (!restartNginxResult.success) {
+                    console.log("Failed on restart nginx", restartNginxResult.error);
+                    throw new Error("Failed on restart nginx ...");
+                }
+            }
+    
+        }
+    
         let serverName = "";
-        if ((domainConfig.domainData || []).length > 0) {
-            // user has own domain
-            serverName = domainConfig.domainData.map(d => d.domainName).join(" ");
-        }
-        else 
-        {
-            // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
-            // serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
-            let url = new URL(domainConfig.tempDomain.targetUrl);
-            serverName = url.hostname;
-        }
+        // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
+        // serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
+        let url = new URL(domainConfig.tempDomain.targetUrl);
+        serverName = url.hostname;
     
         updateLongProcess(longProcessData, 'Configing domain ...', "running", {
             progress: 70
         });
 
-        let root = `${process.env.HOST_PATH}/${publisherId}_${userId}`;
-        
-        console.log("Configing nginx 2 ...");
-        let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxTemplate.conf');
-        let nginxApiTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxApiTemplate.conf');
+        await todo(serverName);
 
-        let nginxTemplate = await fsPromises.readFile(nginxTemplatePath, 'utf8');
-        let nginxApiTemplate = await fsPromises.readFile(nginxApiTemplatePath, 'utf8');
-
-        console.log("Configing nginx 3 ...");
-        let serviceRules = "";
-        Object.keys(servicePorts).forEach(serviceName => {
-            let conf = nginxApiTemplate;
-            conf = conf.replace(/{serviceName}/g, serviceName);
-            conf = conf.replace(/{servicePort}/g, servicePorts[serviceName]);
-            serviceRules += `${conf} \n`;
-        })
-
-        console.log("Configing nginx 4 ...");
-        nginxTemplate = nginxTemplate.replace(/{root}/g, root);
-        nginxTemplate = nginxTemplate.replace(/{websiteName}/g, websiteName.toLowerCase());
-        nginxTemplate = nginxTemplate.replace(/{serverName}/g, serverName);
-        nginxTemplate = nginxTemplate.replace(/{serviceRules}/g, serviceRules);
-
-        console.log("Configing nginx 5 ...");
-        let confName = `${serverName}.conf`;
-        let newConfPath = `${process.env.NGINX_CONFS_PATH}/sites-available/${confName}`;
-        let newConfLinkPath = `${process.env.NGINX_CONFS_PATH}/sites-enabled/${confName}`;
-
-        if (await HosterUtils.isFileChange(newConfPath, nginxTemplate)) {
-            // Need to update conf and restart nginx
-            console.log("Configing nginx 6 ...");
-            
-            // await fsPromises.writeFile(newConfPath, nginxTemplate, 'utf8');
-
-            let confResult = await HosterUtils.execShellCommand(
-                `echo "${nginxTemplate}" | sudo tee ${newConfPath}`
-            );
-    
-            if (!confResult.success) {
-                console.log("Failed on create nginx conf", confResult.error);
-                throw new Error("Failed on create nginx conf ...");
-            }
-
-            if (!fs.existsSync(newConfLinkPath))  {
-                let linkResult = await HosterUtils.execShellCommand(
-                    `echo ${process.env.SUDO_PASSWORD} | sudo ln -s ${newConfPath} ${newConfLinkPath}`
-                );
-        
-                if (!linkResult.success) {
-                    console.log("Failed on linking nginx conf", linkResult.error);
-                    throw new Error("Failed on linking nginx conf ...");
-                }
-            }
-
-            console.log("Configing nginx 7 ...");
-            let restartNginxResult = await HosterUtils.execShellCommand(
-                `echo ${process.env.SUDO_PASSWORD} | sudo -S systemctl reload nginx`
-            );
-    
-            if (!restartNginxResult.success) {
-                console.log("Failed on restart nginx", restartNginxResult.error);
-                throw new Error("Failed on restart nginx ...");
-            }
+        if ((domainConfig.domainData || []).length > 0) {
+            // user has own domain
+            domainConfig.domainData.forEach(async (d) => {
+                serverName = d.domainName;
+                await todo(serverName);
+            });
         }
-
+        
         console.log("Configing nginx complete");
         return {
             success: true,

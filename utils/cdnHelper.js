@@ -38,9 +38,9 @@ CDNHelper.domainExist = async (domain) => {
 
 CDNHelper.updateOrCreateHttps = async (domain) => {
     try{
-        let result = await CDNInterface.getHttpsSetting(domain);
+        let {success, result} = await CDNInterface.getHttpsSetting(domain);
 
-        if (!result.success)
+        if (!success)
             throw new Error('Failed on get https setting');
         
             console.log("updateOrCreateHttps", result)
@@ -49,16 +49,16 @@ CDNHelper.updateOrCreateHttps = async (domain) => {
 
             if (!updateStatusResult.success)
                 throw new Error('Failed on update https status');
-
-            let updateResult = await CDNInterface.updateHttpsSetting(domain, {
-                f_ssl_type: 'arvan',
-                f_ssl_subdomain: true,
-                f_ssl_redirect: true
-            });
-            
-            if (!updateResult.success)
-                throw new Error('Failed on update https setting');
         }
+
+        let updateResult = await CDNInterface.updateHttpsSetting(domain, {
+            f_ssl_type: 'arvan',
+            f_ssl_subdomain: true,
+            f_ssl_redirect: true
+        });
+        
+        if (!updateResult.success)
+            throw new Error('Failed on update https setting');
 
         return {
             success: true

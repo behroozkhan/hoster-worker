@@ -292,6 +292,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
 
                 url = domain;
 
+                console.log("domainExist", domain)
                 if (!await CDNHelper.domainExist(domain)) {
                     throw new Error('Domain is not exist ...');
                 }

@@ -292,7 +292,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
             for (let i = 0 ; i < activeDomains.length; i++) {
                 let domain = activeDomains[i].domainName;
 
-                url = domain;
+                if (!url) url = domain;
 
                 console.log("domainExist", domain)
                 if (!await CDNHelper.domainExist(domain)) {
@@ -350,50 +350,47 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                 }
             }
         }
-        else 
-        {
-            console.log("Configing CDN 2 ...");
-            // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
-            // serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
-            // domain = domainConfig.publisherWebsiteDomain;
-            domain = domainConfig.tempDomain.publisherTempDomain;
-            // url = `${serverName}/${websiteName}`;
-            url = domainConfig.tempDomain.targetUrl;
+        console.log("Configing CDN 2 ...");
+        // user does not have a domain yet. use domainConfig.publisherWebsiteDomain
+        // serverName = `${username}.${domainConfig.publisherWebsiteDomain}`;
+        // domain = domainConfig.publisherWebsiteDomain;
+        domain = domainConfig.tempDomain.publisherTempDomain;
+        // url = `${serverName}/${websiteName}`;
+        if (!url) url = domainConfig.tempDomain.targetUrl;
 
-            if (!await CDNHelper.cdnRecordExist(domain, subDomain)) {
-                let createRecordResult = await CDNInterface.createDNSRecord(domain, {
-                    type: 'a',
-                    name: subDomain,
-                    value: [{
-                        ip: process.env.IP
-                    }],
-                    cloud: true,
-                    upstream_https: "http",
-                })
-                console.log("Configing CDN 3 ...");
+        if (!await CDNHelper.cdnRecordExist(domain, subDomain)) {
+            let createRecordResult = await CDNInterface.createDNSRecord(domain, {
+                type: 'a',
+                name: subDomain,
+                value: [{
+                    ip: process.env.IP
+                }],
+                cloud: true,
+                upstream_https: "http",
+            })
+            console.log("Configing CDN 3 ...");
 
-                if (!createRecordResult.success) {
-                    console.log("createRecord error", createRecordResult.error);
-                    throw new Error('Failed on create new dns record ...');
-                }
+            if (!createRecordResult.success) {
+                console.log("createRecord error", createRecordResult.error);
+                throw new Error('Failed on create new dns record ...');
             }
-            
-            let storageSubDomain = `${websiteName}storage${username}`;
-            if (!await CDNHelper.cdnRecordExist(domain, storageSubDomain)) {
-                let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
-                    type: 'cname',
-                    name: storageSubDomain,
-                    value: {
-                        host: "weblancerstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
-                        host_header: "dest"
-                    },
-                    cloud: true
-                });
+        }
+        
+        let storageSubDomain = `${websiteName}storage${username}`;
+        if (!await CDNHelper.cdnRecordExist(domain, storageSubDomain)) {
+            let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
+                type: 'cname',
+                name: storageSubDomain,
+                value: {
+                    host: "weblancerstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
+                    host_header: "dest"
+                },
+                cloud: true
+            });
 
-                if (!createStorageRecordResult.success) {
-                    console.log("createStorageRecord error", createStorageRecordResult.error);
-                    throw new Error('Failed on create new storage dns record ...');
-                }
+            if (!createStorageRecordResult.success) {
+                console.log("createStorageRecord error", createStorageRecordResult.error);
+                throw new Error('Failed on create new storage dns record ...');
             }
         }
 

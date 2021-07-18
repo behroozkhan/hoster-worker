@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { response } = require('express');
 CDNInterface = {};
 
 let authentication = "";
@@ -40,7 +41,12 @@ CDNInterface.createNewDomain = async (domain) => {
         }
     } catch (error) {
         console.log("createNewDomain error", error);
-        return {success: false, error};
+        let result = {};
+        if (error.response.status === 422)
+            result.status = 409;
+        else
+            result.status = error.response.status;
+        return {success: false, error, response: error.response, result};
     }
 }
 

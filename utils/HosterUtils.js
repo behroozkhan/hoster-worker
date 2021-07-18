@@ -150,11 +150,12 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
     try {
         console.log("Configing nginx 1 ...");
         
-        let todo = async (serverName) => {
+        let todo = async (serverName, isDomain) => {
             let root = `${process.env.HOST_PATH}/${publisherId}_${userId}`;
         
             console.log("Configing nginx 2 ...");
-            let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxTemplateTemp.conf');
+            let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 
+            isDomain? 'nginxTemplateTemp.conf': 'nginxTemplate.conf');
             let nginxApiTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxApiTemplate.conf');
     
             let nginxTemplate = await fsPromises.readFile(nginxTemplatePath, 'utf8');
@@ -235,7 +236,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
             // user has own domain
             domainConfig.domainData.forEach(async (d) => {
                 serverName = d.domainName;
-                await todo(serverName);
+                await todo(serverName, true);
             });
         }
         

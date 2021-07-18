@@ -155,7 +155,7 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
         
             console.log("Configing nginx 2 ...");
             let nginxTemplatePath = path.join(__dirname, '..', 'baseFiles', 
-            isDomain? 'nginxTemplateTemp.conf': 'nginxTemplate.conf');
+                !isDomain? 'nginxTemplateTemp.conf': 'nginxTemplate.conf');
             let nginxApiTemplatePath = path.join(__dirname, '..', 'baseFiles', 'nginxApiTemplate.conf');
     
             let nginxTemplate = await fsPromises.readFile(nginxTemplatePath, 'utf8');

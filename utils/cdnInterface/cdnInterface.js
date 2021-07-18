@@ -58,7 +58,7 @@ CDNInterface.getDomainInfo = async (domain) => {
         });
 
         console.log("getDomainInfo respone: ", response);
-        return {success: true, result: response.data};
+        return {success: true, result: response.data.data};
     } catch (error) {
         console.log("getDomainInfo error", error);
         return {success: false, error};

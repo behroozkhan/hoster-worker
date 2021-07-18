@@ -10,7 +10,7 @@ let jsonParser = bodyParser.json()
 router.post('/createdomain', jsonParser, async (req, res) => {
     let {domain} = req.body;
 
-    let {success} = await CDNInterface.createNewDomain(domain);
+    let {success, result} = await CDNInterface.createNewDomain(domain);
 
     if (!success){
         res.status(500).json(
@@ -22,7 +22,7 @@ router.post('/createdomain', jsonParser, async (req, res) => {
     }
 
     res.json(
-        new Response(true, {}).json()
+        new Response(true, result).json()
     );
 })
 

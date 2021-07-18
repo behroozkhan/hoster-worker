@@ -311,7 +311,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                 }
                 
                 // TODO add @ dns record
-                if (!await CDNHelper.cdnRecordExist(domain, "@")) {
+                if (!await CDNHelper.cdnRecordExist(domain, "")) {
                     let createRecordResult = await CDNInterface.createDNSRecord(domain, {
                         type: 'a',
                         name: "@",

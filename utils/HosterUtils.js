@@ -299,8 +299,43 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                     console.log("https error", httpsResult.error);
                     throw new Error("Failed on updateOrCreateHttps ...");
                 }
+                
+                // TODO add @ dns record
+                if (!await CDNHelper.cdnRecordExist(domain, "@")) {
+                    let createRecordResult = await CDNInterface.createDNSRecord(domain, {
+                        type: 'a',
+                        name: "@",
+                        value: [{
+                            ip: process.env.IP
+                        }],
+                        cloud: true
+                    })
+                    console.log("Configing CDN 111 ...");
+    
+                    if (!createRecordResult.success) {
+                        console.log("createRecord error", createRecordResult.error);
+                        throw new Error('Failed on create new dns record ...');
+                    }
+                }
 
                 // TODO add object storage Cname
+                let storageSubDomain = `storage`;
+                if (!await CDNHelper.cdnRecordExist(domain, storageSubDomain)) {
+                    let createStorageRecordResult = await CDNInterface.createDNSRecord(domain, {
+                        type: 'cname',
+                        name: storageSubDomain,
+                        value: {
+                            host: "weblancerstorage.s3.ir-thr-at1.arvanstorage.com", // TODO make it dynamic
+                            host_header: "dest"
+                        },
+                        cloud: true
+                    });
+
+                    if (!createStorageRecordResult.success) {
+                        console.log("createStorageRecord error", createStorageRecordResult.error);
+                        throw new Error('Failed on create new storage dns record ...');
+                    }
+                }
             }
         }
         else 

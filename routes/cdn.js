@@ -13,7 +13,7 @@ router.post('/createdomain', jsonParser, async (req, res) => {
     let {success, result} = await CDNInterface.createNewDomain(domain);
 
     if (!success){
-        res.status(500).json(
+        res.json(
             new Response(false, result, 
                 "Can't create domain"
             ).json()

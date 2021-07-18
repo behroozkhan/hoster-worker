@@ -46,7 +46,7 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
         req.body[key] = JSON.parse(req.body[key]);
     })
 
-    const {username, websiteName, websiteId, userId, 
+    const {username, websiteName, websiteId, userId, webhooks,
         publisherId, domainConfig, metadata, longProcessData} = req.body;
 
     res.json(
@@ -103,6 +103,18 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
     console.log("Hosting Complete");
 
     await waitForMilis(500);
+
+    let webhook = webhooks[0];
+    try {
+        let url = webhook.url;
+        await axios.post(url, {websiteId, domainConfig}, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log("Webhook error", error);
+    }
 
     updateLongProcess(longProcessData, 'Website hosted successfully ...', "complete", {
         progress: 100,

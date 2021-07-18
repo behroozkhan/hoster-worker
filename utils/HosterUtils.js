@@ -272,6 +272,7 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
             progress: 55
         });
 
+        console.log("domainConfig.domainData", domainConfig.domainData)
         let activeDomains = (domainConfig.domainData || []).filter(d => {
             return d.active;
         })

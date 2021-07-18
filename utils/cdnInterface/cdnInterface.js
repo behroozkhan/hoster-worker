@@ -70,7 +70,7 @@ CDNInterface.removeDomain = async (domain, domainId) => {
         let url = `${baseUrl}/domains/${domain}`;
         let params = {id: domainId};
         let response = await axios.delete(url, {
-            ...{params}, ...getOptions()
+            params, ...getOptions()
         });
 
         console.log("dnsRecordList respone: ", response);

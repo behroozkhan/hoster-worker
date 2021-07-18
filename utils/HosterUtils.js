@@ -394,6 +394,9 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
             }
         }
 
+        if (!url.startsWith("https://"))
+            url = "https://" + url;
+
         console.log("Configing CDN complete");
         return {
             success: true,

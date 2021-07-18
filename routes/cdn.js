@@ -96,7 +96,7 @@ router.post('/removedomain', jsonParser, async (req, res) => {
         );
         return;
     }
-    let {success2, result2} = await CDNInterface.removeDomain(domain, result.id);
+    let {success2, result2} = await CDNInterface.removeDomain(domain, result.data.id);
 
     if (!success2){
         res.status(500).json(

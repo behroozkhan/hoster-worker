@@ -9,6 +9,7 @@ const Response = require('./utils/response')
 let {
     updateLongProcess, waitForMilis,
 } = require('./utils/utils');
+const axios = require('axios');
 
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
 app.use(cors());
@@ -104,8 +105,8 @@ app.post('/host', upload.single('siteZip'), async (req, res) => {
 
     await waitForMilis(500);
 
-    let webhook = webhooks[0];
     try {
+        let webhook = webhooks[0];
         let url = webhook.url;
         await axios.post(url, {websiteId, domainConfig}, {
             headers: {

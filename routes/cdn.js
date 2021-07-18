@@ -89,10 +89,8 @@ router.post('/removedomain', jsonParser, async (req, res) => {
     let {success, result} = await CDNInterface.getDomainInfo(domain);
     
     if (!success){
-        res.status(500).json(
-            new Response(false, {}, 
-                "Can't get domain info"
-            ).json()
+        res.json(
+            new Response(true, {}).json()
         );
         return;
     }

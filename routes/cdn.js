@@ -179,7 +179,7 @@ router.post('/trafficusage', jsonParser, async (req, res) => {
     console.log("trafficusage sumTraffic, sumRequest", sumTraffic, sumRequest)
     res.json(
         new Response(true, {
-            sumTraffic, sumRequest, reports
+            sumTraffic, sumRequest
         }).json()
     );
 })

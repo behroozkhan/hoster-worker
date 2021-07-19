@@ -133,10 +133,11 @@ router.post('/trafficusage', jsonParser, async (req, res) => {
         return;
     }
 
-    sumTraffic += result.data.statistics.traffics.total;
-    sumRequest += result.data.statistics.requests.total;
+    // TODO due to arvan bug, must remove it. back it when bug resolved
+    // sumTraffic += result.data.statistics.traffics.total;
+    // sumRequest += result.data.statistics.requests.total;
 
-    reports.tempDomainStorage = result.data;
+    // reports.tempDomainStorage = result.data;
 
     for (let i = 0; i < domainConfig.domainData.length; i++) {
         let domain = domainConfig.domainData[i];
@@ -169,10 +170,11 @@ router.post('/trafficusage', jsonParser, async (req, res) => {
             return;
         }
 
-        reports[domain.domainName].storage = result3.data;
+        // reports[domain.domainName].storage = result3.data;
         
-        sumTraffic += result3.data.statistics.traffics.total;
-        sumRequest += result3.data.statistics.requests.total;
+        // TODO due to arvan bug, must remove it. back it when bug resolved
+        // sumTraffic += result3.data.statistics.traffics.total;
+        // sumRequest += result3.data.statistics.requests.total;
     }
 
     res.json(

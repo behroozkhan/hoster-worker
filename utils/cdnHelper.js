@@ -76,12 +76,12 @@ CDNHelper.getDomainUsage = async (domain, subdomain, start, end) => {
         let {success, result} = await CDNInterface.getTrafficReport(domain, undefined, start, end, subdomain);
         
         if (!success) {
-            throw new Error("dnsRecordList error ...");
+            throw new Error("getDomainUsage error ...");
         }
 
         return {success, result};
     } catch (error) {
-        console.log("cdnRecordExist error", error);
+        console.log("getDomainUsage error", error);
         return {success: false, error};
     }
 };

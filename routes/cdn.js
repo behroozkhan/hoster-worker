@@ -112,6 +112,7 @@ router.post('/removedomain', jsonParser, async (req, res) => {
 
 router.post('/trafficusage', jsonParser, async (req, res) => {
     let {domainConfig, start, end} = req.body;
+    console.log("trafficusage")
 
     let sumTraffic = 0;
     let sumRequest = 0;

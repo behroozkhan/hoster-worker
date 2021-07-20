@@ -83,9 +83,13 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         });
 
         // turn of all old services from oldServicePorts
-        Object.values(oldServicePorts).forEach(async (port) => {
+        let ports = Object.values(oldServicePorts);
+        for(const port of ports) {
             await execShellCommand(`fuser -k ${port}/tcp`);
-        });
+        }
+        // Object.values(oldServicePorts).forEach (async (port) => {
+        //     await execShellCommand(`fuser -k ${port}/tcp`);
+        // });
         console.log("Copying files 11 ...");
 
         // start services from metadata
@@ -93,13 +97,13 @@ HosterUtils.hostSiteZipFile = async (file, websiteName, userId, publisherId, met
         let services = metadata.services || [];
         
         console.log("Copying files 12 ...");
-        services.forEach(async (service) => {
+        for (const service of services) {
             let serviceResult = await HosterUtils.installService(service, `${finalPath}/services`);
             if (!serviceResult.success)
                 throw new Error(`Can't install service for hoster services: ${serviceResult.message}`);
 
             servicePorts[service.name] = serviceResult.port;
-        });
+        }
 
         console.log("Copying files 13 ...");
         // copy servicePorts to `${finalPath}/servicePorts.json`
@@ -234,12 +238,12 @@ HosterUtils.configNginx = async (username, websiteName, publisherId, userId, fin
 
         if ((domainConfig.domainData || []).length > 0) {
             // user has own domain
-            domainConfig.domainData.forEach(async (d) => {
+            for (const d of domainConfig.domainData) {
                 if (d.active) {
                     serverName = d.domainName;
                     await todo(serverName, true);
                 }
-            });
+            }
         }
         
         console.log("Configing nginx complete");

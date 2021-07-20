@@ -16,9 +16,7 @@ let trafficJob = async () => {
     let path = `${process.env.HOST_PATH}`;
     let folders = await getDirectories(path);
     
-    let input = {
-
-    };
+    let input = {};
 
     for (const folder of folders) {
         let userId = parseInt(folder.split('_')[1]);

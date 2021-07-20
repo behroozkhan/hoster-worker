@@ -305,12 +305,12 @@ HosterUtils.configCDN = async (username, websiteName, websiteId,
                 //     await CDNInterface.removeDNSRecord(domain, dnsRecord.id);
                 // }
 
-                let httpsResult = await CDNHelper.updateOrCreateHttps(domain);
+                // let httpsResult = await CDNHelper.updateOrCreateHttps(domain);
 
-                if (!httpsResult.success) {
-                    console.log("https error", httpsResult.error);
-                    throw new Error("Failed on updateOrCreateHttps ...");
-                }
+                // if (!httpsResult.success) {
+                //     console.log("https error", httpsResult.error);
+                //     throw new Error("Failed on updateOrCreateHttps ...");
+                // }
                 
                 // TODO add @ dns record
                 if (!await CDNHelper.cdnRecordExist(domain, "")) {

@@ -71,6 +71,24 @@ CDNHelper.updateOrCreateHttps = async (domain) => {
     }
 };
 
+CDNHelper.httpsReady = async (domain) => {
+    try{
+        let {success, result} = await CDNInterface.getHttpsSetting(domain);
+
+        if (!success)
+            throw new Error('Failed on get https setting');
+
+        return {
+            success: true, result: result.data.f_ssl_type !== "arvan"
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error
+        };
+    }
+};
+
 CDNHelper.getDomainUsage = async (domain, subdomain, start, end) => {
     try{
         let {success, result} = await CDNInterface.getTrafficReport(domain, undefined, start, end, subdomain);

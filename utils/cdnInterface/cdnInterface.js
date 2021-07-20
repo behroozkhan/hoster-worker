@@ -237,6 +237,25 @@ CDNInterface.updateHttpsStatus = async (domain, status) => {
 CDNInterface.renewSSLCertificate = async (domain) => {
     
 }
+
+CDNInterface.redirectWWW = async (domain) => {
+    try {
+        let url = `${baseUrl}/domains/${domain}/settings/www-redirect`;
+        let body = {f_redirect_to_www: "root"};
+        let response = await axios.put(url, body, getOptions());
+
+        console.log("redirectWWW respone: ", response);
+        if (response.status === 200) {
+            return {success: true};
+        } else {
+            return {success: false};
+        }
+    } catch (error) {
+        console.log("redirectWWW error", error);
+        return {success: false, error};
+    }
+}
+
 // TODO CDN
 
 // TODO Report

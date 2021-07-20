@@ -19,19 +19,17 @@ let trafficJob = async () => {
     let input = {
 
     };
-    folders.forEach(async folder => {
+
+    for (const folder of folders) {
         let userId = parseInt(folder.split('_')[1]);
         input[userId] = [];
 
         let userPath = `${path}/${folder}`;
-        console.log("userPath", userPath)
         let subFolders = await getDirectories(userPath);
-        console.log("subFolders", subFolders)
         subFolders.forEach(subFolder => {
-            let websiteName = subFolder;
-            input[userId].push(websiteName);
+            input[userId].push(subFolder);
         })
-    });
+    }
 
     console.log("trafficJob", input)
 }

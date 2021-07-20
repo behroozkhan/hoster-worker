@@ -5,7 +5,7 @@ const readdir = Promise.promisify(require('fs').readdir)
 let scheduleTraficJob = () => {
     console.log("scheduleTraficJob")
     // cron.schedule('*/30 * * * *', async () => {
-    cron.schedule('* * * * * *', async () => {
+    cron.schedule('*/10 * * * * *', async () => {
         await trafficJob();
     });
 }

@@ -29,9 +29,4 @@ let getDirectories = async (path) => {
         .map(dirent => dirent.name);
 }
 
-let getDirectories = source =>
-  readdirSync(source, { withFileTypes: true })
-    .filter(dirent => dirent.isDirectory())
-    .map(dirent => dirent.name);
-
 module.exports = scheduleTraficJob;

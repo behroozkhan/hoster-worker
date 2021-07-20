@@ -26,6 +26,7 @@ let trafficJob = async () => {
         let userPath = `${path}/${folder}`;
         console.log("userPath", userPath)
         let subFolders = await getDirectories(userPath);
+        console.log("subFolders", subFolders)
         subFolders.forEach(subFolder => {
             let websiteName = subFolder;
             input[userId].push(websiteName);

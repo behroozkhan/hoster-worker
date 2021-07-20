@@ -79,7 +79,10 @@ CDNHelper.httpsReady = async (domain) => {
             throw new Error('Failed on get https setting');
 
         return {
-            success: true, result: result.data.f_ssl_type === "arvan"
+            success: true, result: {
+                httpsReady: result.data.f_ssl_type === "arvan",
+                needInit: result.data.f_ssl_type === "off"
+            }
         };
     } catch (error) {
         return {

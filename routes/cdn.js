@@ -21,28 +21,6 @@ router.post('/createdomain', jsonParser, async (req, res) => {
         return;
     }
 
-    let {success: success2} = await CDNInterface.redirectWWW(domain);
-
-    if (!success2){
-        res.status(500).json(
-            new Response(false, {}, 
-                "Can't redirectWWW for domain"
-            ).json()
-        );
-        return;
-    }
-
-    let {success: success3} = await CDNHelper.updateOrCreateHttps(domain);
-
-    if (!success3) {
-        res.status(500).json(
-            new Response(false, {}, 
-                "Can't updateOrCreateHttps for domain"
-            ).json()
-        );
-        return;
-    }
-
     res.json(
         new Response(true, result).json()
     );
@@ -132,6 +110,36 @@ router.post('/removedomain', jsonParser, async (req, res) => {
     );
 })
 
+router.post('/domaininit', jsonParser, async (req, res) => {
+    let {domain} = req.body;
+
+    let {success} = await CDNInterface.redirectWWW(domain);
+
+    if (!success){
+        res.status(500).json(
+            new Response(false, {}, 
+                "Can't redirectWWW for domain"
+            ).json()
+        );
+        return;
+    }
+
+    let {success: success2} = await CDNHelper.updateOrCreateHttps(domain);
+
+    if (!success2) {
+        res.status(500).json(
+            new Response(false, {}, 
+                "Can't updateOrCreateHttps for domain"
+            ).json()
+        );
+        return;
+    }
+
+    res.json(
+        new Response(true, {}).json()
+    );
+})
+
 router.post('/checkdomain', jsonParser, async (req, res) => {
     let {domain} = req.body;
 
@@ -146,7 +154,7 @@ router.post('/checkdomain', jsonParser, async (req, res) => {
         return;
     }
 
-    let {success: success2, result: httpsReady} = await CDNHelper.httpsReady(domain);
+    let {success: success2, result: {httpsReady, needInit}} = await CDNHelper.httpsReady(domain);
 
     if (!success2) {
         res.status(500).json(
@@ -158,7 +166,7 @@ router.post('/checkdomain', jsonParser, async (req, res) => {
     }
 
     res.json(
-        new Response(true, {httpsReady}).json()
+        new Response(true, {httpsReady, needInit}).json()
     );
 })
 

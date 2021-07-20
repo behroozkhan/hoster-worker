@@ -15,8 +15,23 @@ let trafficJob = async () => {
 
     let path = `${process.env.HOST_PATH}`;
     let folders = await getDirectories(path);
+    
+    let input = {
 
-    console.log("trafficJob", folders);
+    };
+    folders.forEach(async folder => {
+        let userId = parseInt(folder.split('_')[1]);
+        input[userId] = [];
+
+        let userPath = `${path}/${folder}`;
+        let subFolders = await getDirectories(userPath);
+        subFolders.forEach(subFolder => {
+            let websiteName = subFolder;
+            input[userId].push(websiteName);
+        })
+    });
+
+    console.log("trafficJob", input)
 }
 
 let getWebsiteData = async (inputs) => {

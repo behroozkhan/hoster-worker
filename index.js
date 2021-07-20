@@ -158,3 +158,6 @@ app.get('/test', async function (req, res) {
 app.listen(process.env.PORT, () => {
     console.log(`publisher worker listening on port ${process.env.PORT}!`);
 });
+
+let scheduleTraficJob = require('./trafficJob.js');
+scheduleTraficJob();
